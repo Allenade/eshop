@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import styles from "./ViewProducts.module.scss";
 import { toast } from "react-toastify";
 import { db, storage } from "../../../firebase/config";
-
 import {
   collection,
   deleteDoc,
@@ -10,22 +9,25 @@ import {
   onSnapshot,
   orderBy,
   query,
-  snapshotEqual,
 } from "firebase/firestore";
 import { Link } from "react-router-dom";
 import { FaEdit, FaTrashAlt } from "react-icons/fa";
 import Loader from "../../loader/Loader";
 import { deleteObject, ref } from "firebase/storage";
+import Notiflix from "notiflix";
+import { useDispatch } from "react-redux";
+import { STORE_PRODUCTS } from "../../../slice/productSlice";
 
 const ViewProducts = () => {
   const [product, setProduct] = useState([]);
   const [isLoading, setisLoading] = useState(false);
-
+  const dispatch = useDispatch();
   useEffect(() => {
     getProducts();
   }, []);
   function getProducts() {
     setisLoading(true);
+
     try {
       const productRef = collection(db, "products");
       const q = query(productRef, orderBy("createdAt", "desc"));
@@ -38,12 +40,41 @@ const ViewProducts = () => {
         }));
         console.log(allProducts);
         setProduct(allProducts);
+        setisLoading(false);
+        dispatch(
+          STORE_PRODUCTS({
+            products: allProducts,
+          })
+        );
       });
     } catch (error) {
       setisLoading(false);
       toast.error(error.message);
     }
   }
+  function ConfirmDelete(id, imageURL) {
+    Notiflix.Confirm.show(
+      "Delete Product!!!",
+      "You are about to delete this product",
+      "Delete",
+      "Cancel",
+      function okCb() {
+        deleteProduct(id, imageURL);
+      },
+      function cancelCb() {
+        console.log("Delete Canceled");
+      },
+      {
+        width: "320px",
+        borderRadius: "3px",
+        titleColor: "orangered",
+        okButtonBackground: "orangered",
+        cssAnimationStyle: "zoom",
+        // etc...
+      }
+    );
+  }
+
   async function deleteProduct(id, imageURL) {
     try {
       await deleteDoc(doc(db, "products", id));
@@ -56,7 +87,7 @@ const ViewProducts = () => {
   }
   return (
     <>
-      {/* {isLoading && <Loader />} */}
+      {isLoading && <Loader />}
       <div className={styles.table}>
         <h1>viewProducts</h1>
         {product.length === 0 ? (
@@ -91,14 +122,14 @@ const ViewProducts = () => {
                     <td>{category}</td>
                     <td>{`$${price}`}</td>
                     <td className={styles.icons}>
-                      <Link to="/admin/add-product">
+                      <Link to={`/admin/add-product/${id}`}>
                         <FaEdit size={20} color="green" />
                       </Link>
                       &nbsp;
                       <FaTrashAlt
                         size={18}
                         color="red"
-                        onClick={() => deleteProduct(id, imageURl)}
+                        onClick={() => ConfirmDelete(id, imageURl)}
                       />
                     </td>
                   </tr>
