@@ -121,7 +121,7 @@ const AddProducts = () => {
 
   function editProduct(e) {
     e.preventDefault();
-    setisLoading(true);
+    // setisLoading(true);
     if (product.imageURL !== productEdit.imageURL) {
       const storageRef = ref(storage, productEdit.imageURL);
       deleteObject(storageRef);
@@ -139,7 +139,7 @@ const AddProducts = () => {
         createdAt: productEdit.createdAt,
         editedAt: Timestamp.now().toDate(),
       });
-      setisLoading(false);
+      // setisLoading(false);
       toast.success("product Edited Successfully");
       navigate("/admin/all-products");
     } catch (error) {

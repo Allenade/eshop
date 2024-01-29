@@ -15,43 +15,56 @@ import { FaEdit, FaTrashAlt } from "react-icons/fa";
 import Loader from "../../loader/Loader";
 import { deleteObject, ref } from "firebase/storage";
 import Notiflix from "notiflix";
-import { useDispatch } from "react-redux";
-import { STORE_PRODUCTS } from "../../../slice/productSlice";
-
+import { useDispatch, useSelector } from "react-redux";
+import { STORE_PRODUCTS, selectProducts } from "../../../slice/productSlice";
+import useFetchCollection from "../../../customHooks/useFetchCollection";
 const ViewProducts = () => {
-  const [product, setProduct] = useState([]);
-  const [isLoading, setisLoading] = useState(false);
+  const { data, isLoading } = useFetchCollection("products");
+  // const [products, setProduct] = useState([]);
+  // const [isLoading, setisLoading] = useState(false);
+  const products = useSelector(selectProducts);
   const dispatch = useDispatch();
+
   useEffect(() => {
-    getProducts();
-  }, []);
-  function getProducts() {
-    setisLoading(true);
+    dispatch(
+      STORE_PRODUCTS({
+        products: data,
+      })
+    );
+  }, [dispatch, data]);
 
-    try {
-      const productRef = collection(db, "products");
-      const q = query(productRef, orderBy("createdAt", "desc"));
+  // useEffect(() => {
+  //   getProducts();
+  // }, []);
 
-      onSnapshot(q, (snapshot) => {
-        // console.log(snapshot.docs);
-        const allProducts = snapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        }));
-        console.log(allProducts);
-        setProduct(allProducts);
-        setisLoading(false);
-        dispatch(
-          STORE_PRODUCTS({
-            products: allProducts,
-          })
-        );
-      });
-    } catch (error) {
-      setisLoading(false);
-      toast.error(error.message);
-    }
-  }
+  // function getProducts() {
+  //   setisLoading(true);
+
+  //   try {
+  //     const productRef = collection(db, "products");
+  //     const q = query(productRef, orderBy("createdAt", "desc"));
+
+  //     onSnapshot(q, (snapshot) => {
+  //       // console.log(snapshot.docs);
+  //       const allProducts = snapshot.docs.map((doc) => ({
+  //         id: doc.id,
+  //         ...doc.data(),
+  //       }));
+  //       console.log(allProducts);
+  //       setProduct(allProducts);
+  //       setisLoading(false);
+  //       dispatch(
+  //         STORE_PRODUCTS({
+  //           products: allProducts,
+  //         })
+  //       );
+  //     });
+  //   } catch (error) {
+  //     setisLoading(false);
+  //     toast.error(error.message);
+  //   }
+  // }
+
   function ConfirmDelete(id, imageURL) {
     Notiflix.Confirm.show(
       "Delete Product!!!",
@@ -90,7 +103,7 @@ const ViewProducts = () => {
       {isLoading && <Loader />}
       <div className={styles.table}>
         <h1>viewProducts</h1>
-        {product.length === 0 ? (
+        {products.length === 0 ? (
           <p>No product found.</p>
         ) : (
           <table>
@@ -106,7 +119,7 @@ const ViewProducts = () => {
               </tr>
             </thead>
             <tbody>
-              {product.map((product, index) => {
+              {products.map((product, index) => {
                 const { id, name, price, imageURl, category } = product;
                 return (
                   <tr key={id}>
