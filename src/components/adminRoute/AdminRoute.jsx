@@ -17,7 +17,7 @@ const AdminRoute = ({ children }) => {
           <button className="--btn">&larr; Back To Home</button>
         </Link>
       </div>
-    </section>
+    </section> 
   );
 };
 export const AdminLink = ({ children }) => {

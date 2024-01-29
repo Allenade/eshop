@@ -24,47 +24,36 @@ const ViewProducts = () => {
   // const [isLoading, setisLoading] = useState(false);
   const products = useSelector(selectProducts);
   const dispatch = useDispatch();
-
   useEffect(() => {
-    dispatch(
-      STORE_PRODUCTS({
-        products: data,
-      })
-    );
-  }, [dispatch, data]);
+    getProducts();
+  }, []);
+  function getProducts() {
+    setisLoading(true);
 
-  // useEffect(() => {
-  //   getProducts();
-  // }, []);
+    try {
+      const productRef = collection(db, "products");
+      const q = query(productRef, orderBy("createdAt", "desc"));
 
-  // function getProducts() {
-  //   setisLoading(true);
-
-  //   try {
-  //     const productRef = collection(db, "products");
-  //     const q = query(productRef, orderBy("createdAt", "desc"));
-
-  //     onSnapshot(q, (snapshot) => {
-  //       // console.log(snapshot.docs);
-  //       const allProducts = snapshot.docs.map((doc) => ({
-  //         id: doc.id,
-  //         ...doc.data(),
-  //       }));
-  //       console.log(allProducts);
-  //       setProduct(allProducts);
-  //       setisLoading(false);
-  //       dispatch(
-  //         STORE_PRODUCTS({
-  //           products: allProducts,
-  //         })
-  //       );
-  //     });
-  //   } catch (error) {
-  //     setisLoading(false);
-  //     toast.error(error.message);
-  //   }
-  // }
-
+      onSnapshot(q, (snapshot) => {
+        // console.log(snapshot.docs);
+        const allProducts = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        console.log(allProducts);
+        setProduct(allProducts);
+        setisLoading(false);
+        dispatch(
+          STORE_PRODUCTS({
+            products: allProducts,
+          })
+        );
+      });
+    } catch (error) {
+      setisLoading(false);
+      toast.error(error.message);
+    }
+  }
   function ConfirmDelete(id, imageURL) {
     Notiflix.Confirm.show(
       "Delete Product!!!",
@@ -111,6 +100,7 @@ const ViewProducts = () => {
               <tr>
                 <th>s/n</th>
                 <th>Image</th>
+
                 <th>Name</th>
                 <th>Category</th>
 
@@ -119,30 +109,32 @@ const ViewProducts = () => {
               </tr>
             </thead>
             <tbody>
-              {products.map((product, index) => {
+              {product.map((product, index) => {
                 const { id, name, price, imageURl, category } = product;
                 return (
-                  <tr key={id}>
+                  <tr key={product?.id}>
                     <td>{index + 1}</td>
                     <td>
                       <img
-                        src={imageURl}
-                        alt={name}
+                        src={product?.imageURL}
+                        alt=""
                         style={{ width: "100px" }}
                       />
                     </td>
-                    <td>{name}</td>
-                    <td>{category}</td>
-                    <td>{`$${price}`}</td>
+                    <td>{product?.name}</td>
+                    <td>{product?.category}</td>
+                    <td>{`$${product?.price}`}</td>
                     <td className={styles.icons}>
-                      <Link to={`/admin/add-product/${id}`}>
+                      <Link to={`/admin/add-product/${product?.id}`}>
                         <FaEdit size={20} color="green" />
                       </Link>
                       &nbsp;
                       <FaTrashAlt
                         size={18}
                         color="red"
-                        onClick={() => ConfirmDelete(id, imageURl)}
+                        onClick={() =>
+                          ConfirmDelete(product?.id, product?.imageURl)
+                        }
                       />
                     </td>
                   </tr>
