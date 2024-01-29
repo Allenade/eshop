@@ -15,18 +15,18 @@ import { FaEdit, FaTrashAlt } from "react-icons/fa";
 import Loader from "../../loader/Loader";
 import { deleteObject, ref } from "firebase/storage";
 import Notiflix from "notiflix";
-import { useDispatch, useSelector } from "react-redux";
-import { STORE_PRODUCTS, selectProducts } from "../../../slice/productSlice";
-import useFetchCollection from "../../../customHooks/useFetchCollection";
+import { useDispatch } from "react-redux";
+import { STORE_PRODUCTS } from "../../../slice/productSlice";
+
 const ViewProducts = () => {
-  const { data, isLoading } = useFetchCollection("products");
-  // const [products, setProduct] = useState([]);
-  // const [isLoading, setisLoading] = useState(false);
-  const products = useSelector(selectProducts);
+  const [product, setProduct] = useState([]);
+  const [isLoading, setisLoading] = useState(false);
   const dispatch = useDispatch();
+
   useEffect(() => {
     getProducts();
   }, []);
+
   function getProducts() {
     setisLoading(true);
 
@@ -42,6 +42,9 @@ const ViewProducts = () => {
         }));
         console.log(allProducts);
         setProduct(allProducts);
+        console.log(product);
+        console.log(allProducts);
+
         setisLoading(false);
         dispatch(
           STORE_PRODUCTS({
@@ -54,6 +57,7 @@ const ViewProducts = () => {
       toast.error(error.message);
     }
   }
+
   function ConfirmDelete(id, imageURL) {
     Notiflix.Confirm.show(
       "Delete Product!!!",
@@ -92,7 +96,7 @@ const ViewProducts = () => {
       {isLoading && <Loader />}
       <div className={styles.table}>
         <h1>viewProducts</h1>
-        {products.length === 0 ? (
+        {product.length === 0 ? (
           <p>No product found.</p>
         ) : (
           <table>
@@ -109,8 +113,7 @@ const ViewProducts = () => {
               </tr>
             </thead>
             <tbody>
-              {product.map((product, index) => {
-                const { id, name, price, imageURl, category } = product;
+              {product?.map((product, index) => {
                 return (
                   <tr key={product?.id}>
                     <td>{index + 1}</td>
