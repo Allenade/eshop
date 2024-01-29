@@ -22,9 +22,11 @@ const ViewProducts = () => {
   const [product, setProduct] = useState([]);
   const [isLoading, setisLoading] = useState(false);
   const dispatch = useDispatch();
+  
   useEffect(() => {
     getProducts();
   }, []);
+
   function getProducts() {
     setisLoading(true);
 
@@ -40,6 +42,9 @@ const ViewProducts = () => {
         }));
         console.log(allProducts);
         setProduct(allProducts);
+  console.log(product)
+  console.log(allProducts)
+
         setisLoading(false);
         dispatch(
           STORE_PRODUCTS({
@@ -52,6 +57,8 @@ const ViewProducts = () => {
       toast.error(error.message);
     }
   }
+
+
   function ConfirmDelete(id, imageURL) {
     Notiflix.Confirm.show(
       "Delete Product!!!",
@@ -96,8 +103,9 @@ const ViewProducts = () => {
           <table>
             <thead>
               <tr>
-                <th>s/n</th>
+                  <th>s/n</th>
                 <th>Image</th>
+                  
                 <th>Name</th>
                 <th>Category</th>
 
@@ -106,32 +114,29 @@ const ViewProducts = () => {
               </tr>
             </thead>
             <tbody>
-              {product.map((product, index) => {
-                const { id, name, price, imageURl, category } = product;
+              {product?.map((product, index) => {
+               
                 return (
-                  <tr key={id}>
+                  <tr key={product?.id}>
                     <td>{index + 1}</td>
                     <td>
-                      <img
-                        src={imageURl}
-                        alt={name}
-                        style={{ width: "100px" }}
-                      />
+                      <img src={product?.imageURL} alt="" style={{ width: "100px" }}/>
                     </td>
-                    <td>{name}</td>
-                    <td>{category}</td>
-                    <td>{`$${price}`}</td>
+                    <td>{product?.name}</td>
+                    <td>{product?.category}</td>
+                    <td>{`$${product?.price}`}</td>
                     <td className={styles.icons}>
-                      <Link to={`/admin/add-product/${id}`}>
+                      <Link to={`/admin/add-product/${product?.id}`}>
                         <FaEdit size={20} color="green" />
                       </Link>
                       &nbsp;
                       <FaTrashAlt
                         size={18}
                         color="red"
-                        onClick={() => ConfirmDelete(id, imageURl)}
+                        onClick={() => ConfirmDelete(product?.id, product?.imageURl)}
                       />
                     </td>
+                    
                   </tr>
                 );
               })}

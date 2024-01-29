@@ -34,9 +34,9 @@ const AddProducts = () => {
   const { id } = useParams();
   const products = useSelector(selectProducts);
 
-  const productEdit = products.find((item) => item.id === id);
+  const productEdit = products?.find((item) => item.id === id);
 
-  console.log(productEdit);
+  
   const [product, setProduct] = useState(() => {
     const newState = detectForm(
       id,
@@ -61,12 +61,13 @@ const AddProducts = () => {
     const { name, value } = e.target;
     setProduct({ ...product, [name]: value });
   }
-  function handleImageChange(e) {
+
+ async  function handleImageChange(e) {
     const file = e.target.files[0];
     // console.log(file);
     const storageRef = ref(storage, `e-shop/${Date.now()}${file.name}`);
     const uploadTask = uploadBytesResumable(storageRef, file);
-
+// https://firebasestorage.googleapis.com/v0/b/eshop-6e4a9.appspot.com/o/e-shop%2F1706486140895Screenshot%20from%202024-01-26%2013-39-45.png?alt=media&token=47f05b82-5e3c-4f5e-a527-247a7f701158
     uploadTask.on(
       "state_changed",
       (snapshot) => {
@@ -81,10 +82,10 @@ const AddProducts = () => {
         // Handle unsuccessful uploads
         toast.error(error.message);
       },
-      () => {
+      async () => {
         // Handle successful uploads on complete
         // For instance, get the download URL: https://firebasestorage.googleapis.com/...
-        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+        await getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
           setProduct({ ...product, imageURL: downloadURL });
           toast.success("Image uploaded successfully.");
         });
@@ -92,13 +93,13 @@ const AddProducts = () => {
     );
   }
 
-  const addProduct = (e) => {
+  const addProduct = async (e) => {
     e.preventDefault();
     setisLoading(true);
     // console.log(product);
     try {
       // Add a new document with a generated id.
-      const docRef = addDoc(collection(db, "products"), {
+       await addDoc(collection(db, "products"), {
         name: product.name,
         imageURL: product.imageURL,
         price: Number(product.price),
@@ -119,17 +120,17 @@ const AddProducts = () => {
     }
   };
 
-  function editProduct(e) {
+  async function editProduct(e) {
     e.preventDefault();
     setisLoading(true);
     if (product.imageURL !== productEdit.imageURL) {
       const storageRef = ref(storage, productEdit.imageURL);
-      deleteObject(storageRef);
+      await deleteObject(storageRef);
     }
     // setisLoading(false);
 
     try {
-      setDoc(doc(db, "products", id), {
+      await setDoc(doc(db, "products", id), {
         name: product.name,
         imageURL: product.imageURL,
         price: Number(product.price),
@@ -163,7 +164,7 @@ const AddProducts = () => {
               placeholder="Product name"
               required
               name="name"
-              value={product.name}
+              value={product?.name}
               onChange={(e) => handleInputChange(e)}
             />
             <label>Product Image:</label>
@@ -189,14 +190,14 @@ const AddProducts = () => {
                 name="image"
                 onChange={(e) => handleImageChange(e)}
               />
-              {product.imageURL === "" ? null : (
+              {product?.imageURL === "" ? null : (
                 <input
                   type="text"
                   // required
                   placeholder="image Url"
                   name="imageURL"
                   disabled
-                  value={product.imageURL}
+                  value={product?.imageURL}
                 />
               )}
             </Card>
@@ -206,7 +207,7 @@ const AddProducts = () => {
               placeholder="Product price"
               required
               name="price"
-              value={product.price}
+              value={product?.price}
               onChange={(e) => handleInputChange(e)}
             />
 
@@ -216,7 +217,7 @@ const AddProducts = () => {
             placeholder="Product price"
             required
             name="price"
-            value={product.price}
+            value={product?.price}
             onChange={(e) => handleInputChange(e)}
           /> */}
 
@@ -224,7 +225,7 @@ const AddProducts = () => {
             <select
               required
               name="category"
-              value={product.category}
+              value={product?.category}
               onChange={(e) => handleInputChange(e)}
             >
               <option value="" disabled>
@@ -244,7 +245,7 @@ const AddProducts = () => {
               placeholder="Product brand"
               required
               name="brand"
-              value={product.brand}
+              value={product?.brand}
               onChange={(e) => handleInputChange(e)}
             />
             <label>Product Description</label>
@@ -252,7 +253,7 @@ const AddProducts = () => {
               name="desc"
               required
               onChange={(e) => handleInputChange(e)}
-              value={product.desc}
+              value={product?.desc}
               cols="30"
               rows="10"
             ></textarea>
