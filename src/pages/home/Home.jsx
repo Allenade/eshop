@@ -1,4 +1,4 @@
-// import Slider from "../../components/slider/slider";
+import Slider from "../../components/slider/slider";
 
 import { Product } from "../../components/product/Product";
 
@@ -7,7 +7,7 @@ import { Product } from "../../components/product/Product";
 const Home = () => {
   return (
     <div>
-      {/* <Slider /> */}
+      <Slider />
       <Product />
     </div>
   );
