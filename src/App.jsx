@@ -6,6 +6,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Header, Footer } from "./components";
 import AdminRoute from "./components/adminRoute/AdminRoute";
+import { ProductDetails } from "./components/product/productDetails/ProductDetails";
 
 function App() {
   return (
@@ -28,6 +29,8 @@ function App() {
               </AdminRoute>
             }
           />
+
+          <Route path="/product-details/:id" element={<ProductDetails />} />
         </Routes>
         <Footer />
       </BrowserRouter>
