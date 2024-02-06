@@ -1,7 +1,7 @@
-// import Slider from "../../components/slider/slider";
+import Slider from "../../components/slider/slider";
 
 import { Product } from "../../components/product/Product";
-// import { useEffect } from "react";
+import { useEffect } from "react";
 
 // import AdminRoute from "../../components/adminRoute/AdminRoute";
 
@@ -17,12 +17,12 @@ const Home = () => {
       });
     return;
   }
-  // useEffect(() => {
-  //   scrollProducts();
-  // }, []);
+  useEffect(() => {
+    scrollProducts();
+  }, []);
   return (
     <div>
-      {/* <Slider /> */}
+      <Slider />
       <Product />
     </div>
   );

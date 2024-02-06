@@ -1,58 +1,59 @@
-.product {
-  .card {
-    padding: 1rem;
+.filter {
+  h4 {
     margin-top: 1rem;
   }
-  .review {
-    border-top: 1px solid #ccc;
+  .category button {
+    display: block;
+    text-align: left;
+    width: 80%;
+    height: 3rem;
+    font-size: 1.5rem;
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+    // margin-bottom: 5px;
+    border-bottom: 1px solid #777;
   }
-  .details {
-    padding-top: 2rem;
-    display: flex;
 
-    .img {
-      width: 45%;
-      border: 1px solid #ccc;
+  .brand {
+    select {
+      font-size: 1.6rem;
+      font-weight: 300;
+      padding: 5px;
+
+      width: 80%;
+      border: 1px solid #777;
       border-radius: 3px;
-      img {
-        width: 100%;
-      }
-    }
-
-    .content {
-      width: 55%;
-      padding: 0 5px;
-      & > * {
-        margin-bottom: 1rem;
-      }
-      .price {
-        color: orangered;
-        font-weight: 500;
-      }
-
-      .count {
-        display: flex;
-        align-items: center;
-        & > * {
-          margin-right: 1rem;
-        }
-      }
+      outline: none;
     }
   }
 }
 
 @media screen and (max-width: 700px) {
-  .product {
-    .details {
-      flex-direction: column;
-
-      .img {
-        width: 100%;
-      }
-
-      .content {
+  .filter {
+    .category button {
+      width: 100%;
+    }
+    .brand {
+      select {
         width: 100%;
       }
     }
   }
+}
+
+.active {
+  position: relative;
+  // margin-bottom: 2px;
+  padding-left: 1rem;
+}
+
+.active::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 2px;
+  height: 100%;
+  background-color: var(--color-danger);
 }

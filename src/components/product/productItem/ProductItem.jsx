@@ -1,6 +1,8 @@
 import { Link } from "react-router-dom";
 import Card from "../../card/Card";
 import styles from "./ProductItem.module.scss";
+import { useDispatch } from "react-redux";
+import { ADD_TO_CART } from "../../../slice/cartSlice";
 export const ProductItem = ({
   product,
   grid,
@@ -10,6 +12,7 @@ export const ProductItem = ({
   desc,
   imageURL,
 }) => {
+  const dispatch = useDispatch();
   function shortenText(text, n) {
     if (text.length > n) {
       const shortenedText = text.substring(0, n).concat("...");
@@ -17,6 +20,11 @@ export const ProductItem = ({
     }
     return text;
   }
+  const addToCart = (product) => {
+    console.log(product); // Debugging
+
+    dispatch(ADD_TO_CART(product));
+  };
   return (
     <Card cardClass={grid ? `${styles.grid}` : `${styles.list}`}>
       <Link to={`/product-details/${id}`}>
@@ -30,7 +38,12 @@ export const ProductItem = ({
           <h4>{shortenText(name, 18)}</h4>
         </div>
         {!grid && <p className={styles.desc}>{shortenText(desc, 200)}</p>}
-        <button className="--btn --btn-danger">Add To Cart</button>
+        <button
+          className="--btn --btn-danger"
+          onClick={() => addToCart(product)}
+        >
+          Add To Cart
+        </button>
       </div>
     </Card>
   );
