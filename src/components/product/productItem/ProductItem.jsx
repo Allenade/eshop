@@ -2,7 +2,11 @@ import { Link } from "react-router-dom";
 import Card from "../../card/Card";
 import styles from "./ProductItem.module.scss";
 import { useDispatch } from "react-redux";
-import { ADD_TO_CART } from "../../../slice/cartSlice";
+import {
+  ADD_TO_CART,
+  CALCULATE_TOTAL_QUANTITY,
+} from "../../../slice/cartSlice";
+CALCULATE_TOTAL_QUANTITY;
 export const ProductItem = ({
   product,
   grid,
@@ -24,6 +28,7 @@ export const ProductItem = ({
     console.log(product); // Debugging
 
     dispatch(ADD_TO_CART(product));
+    dispatch(CALCULATE_TOTAL_QUANTITY());
   };
   return (
     <Card cardClass={grid ? `${styles.grid}` : `${styles.list}`}>

@@ -11,6 +11,8 @@ import {
 } from "../../slice/productSlice";
 import spinnerImg from "../../assets/spinner.jpg";
 import { FaCogs } from "react-icons/fa";
+import { DECREASE_CART } from "../../slice/cartSlice";
+DECREASE_CART;
 
 export const Product = () => {
   const { data, isLoading } = useFetchCollection("products");

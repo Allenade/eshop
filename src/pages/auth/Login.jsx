@@ -14,12 +14,22 @@ import { useState } from "react";
 import { auth } from "../../firebase/config";
 import { toast } from "react-toastify";
 import Loader from "../../components/loader/Loader";
+import { useSelector } from "react-redux";
+import { selectPreviousURL } from "../../slice/cartSlice";
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setisLoading] = useState(false);
-
+  const previousURL = useSelector(selectPreviousURL);
   const navigate = useNavigate();
+
+  const redirectUser = () => {
+    if (previousURL.includes("cart")) {
+      return navigate("/cart");
+    } else {
+      navigate("/");
+    }
+  };
 
   function loginUser(e) {
     e.preventDefault();
@@ -32,7 +42,7 @@ const Login = () => {
         setisLoading(false);
         toast.success("Login Successful...");
         navigate("/");
-
+        redirectUser();
         // ...
       })
       .catch((error) => {
@@ -56,7 +66,7 @@ const Login = () => {
         // IdP data available using getAdditionalUserInfo(result)
         // ...
         toast.success("login successfully ");
-        navigate("/");
+        redirectUser();
       })
       .catch((error) => {
         // Handle Errors here.
