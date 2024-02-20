@@ -11,11 +11,12 @@ import {
 } from "firebase/auth";
 
 import { useState } from "react";
-import { auth } from "../../firebase/config";
+
 import { toast } from "react-toastify";
 import Loader from "../../components/loader/Loader";
 import { useSelector } from "react-redux";
 import { selectPreviousURL } from "../../slice/cartSlice";
+import { auth } from "../../firebase/config";
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
