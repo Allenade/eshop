@@ -1,4 +1,5 @@
-import dotenv from "dotenv";
+// import dotenv from "dotenv";
+const dotenv = require('dotenv').config(process.env);
 import express from "express";
 import cors from "cors";
 import * as stripe from "stripe";
@@ -6,7 +7,8 @@ import * as stripe from "stripe";
 dotenv.config();
 
 const app = express();
-const stripeInstance = new stripe.Stripe(process.env.STRIPE_PRIVATE_KEY, {
+
+const stripeInstance = new stripe.Stripe(process.env.VITE_APP_STRIPE_PK, {
   apiVersion: "2020-08-27",
 });
 
@@ -18,38 +20,42 @@ app.get("/", (req, res) => {
 });
 
 const calculateOrderAmount = (items) => {
-  // Implement logic to calculate order amount based on items
-  // For example, sum up prices of all items
-  return items.reduce((total, item) => total + item.price, 0);
+  const itemAmounts = items.map(
+    ({ price, cartQuantity }) => price * cartQuantity
+  );
+  const totalAmount = itemAmounts.reduce((total, amount) => total + amount, 0);
+  return totalAmount * 100;
 };
 
 app.post("/create-payment-intent", async (req, res) => {
-  const { items, description, shipping, customerEmail } = req.body;
+  try {
+    const { items, description, shipping } = req.body;
 
-  // Create a PaymentIntent with the order amount and currency
-  const paymentIntent = await stripeInstance.paymentIntents.create({
-    amount: calculateOrderAmount(items),
-    currency: "usd",
-    payment_method_types: ["card"],
-    description,
-    shipping: {
-      address: {
-        line1: shipping.line1,
-        line2: shipping.line2,
-        city: shipping.city,
-        country: shipping.country,
-        postal_code: shipping.postal_code,
+    const paymentIntent = await stripeInstance.paymentIntents.create({
+      amount: calculateOrderAmount(items),
+      currency: "usd",
+      payment_method_types: ["card"],
+      description,
+      shipping: {
+        address: {
+          line1: shipping.line1,
+          line2: shipping.line2,
+          city: shipping.city,
+          country: shipping.country,
+          postal_code: shipping.postal_code,
+        },
+        name: shipping.name,
+        phone: shipping.phone,
       },
-      name: shipping.name,
-      phone: shipping.phone,
-    },
-    receipt_email: customerEmail,
-  });
+    });
 
-  res.send({
-    clientSecret: paymentIntent.client_secret,
-  });
+    res.send({
+      clientSecret: paymentIntent.client_secret,
+    });
+  } catch (error) {
+    res.status(500).send({ error: error.message });
+  }
 });
 
-const PORT = process.env.PORT || 4242;
+const PORT = process.env.VITE_APP_STRIPE_PK || 4242;
 app.listen(PORT, () => console.log(`Node server listening on port ${PORT}`));
