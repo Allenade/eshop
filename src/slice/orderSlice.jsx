@@ -10,11 +10,11 @@ const orderSlice = createSlice({
   reducers: {
     STORE_ORDERS(state, action) {
       console.log(action.payload);
-      state.orderHistory = action.payload;
+      state.orderHistory = action.payload.orderHistory
     },
   },
 });
 
 export const { STORE_ORDERS } = orderSlice.actions;
-export const selectOrderHistory = (state) => state.orderHistory;
+export const selectOrderHistory = (state) => state.orders.orderHistory;
 export default orderSlice.reducer;

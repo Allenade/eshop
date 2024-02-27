@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
@@ -12,7 +13,7 @@ const authSlice = createSlice({
   initialState,
   reducers: {
     SET_ACTIVE_USER: (state, action) => {
-      console.log(action.payload);
+      // console.log(action.payload);
       const { email, userName, userID } = action.payload;
       state.isLoggedIn = true;
       state.email = email;

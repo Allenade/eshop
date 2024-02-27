@@ -1,3 +1,5 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable react/prop-types */
 import { useEffect, useState } from "react";
 import styles from "./ProductList.module.scss";
 import { IoGridSharp } from "react-icons/io5";
