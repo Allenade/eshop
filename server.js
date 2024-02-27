@@ -1,14 +1,13 @@
-// import dotenv from "dotenv";
-const dotenv = require('dotenv').config(process.env);
+import dotenv from "dotenv";
 import express from "express";
 import cors from "cors";
-import * as stripe from "stripe";
+import Stripe from "stripe";
 
 dotenv.config();
 
 const app = express();
 
-const stripeInstance = new stripe.Stripe(process.env.VITE_APP_STRIPE_PK, {
+const stripeInstance = new Stripe(process.env.VITE_APP_STRIPE_PK, {
   apiVersion: "2020-08-27",
 });
 
@@ -57,5 +56,5 @@ app.post("/create-payment-intent", async (req, res) => {
   }
 });
 
-const PORT = process.env.VITE_APP_STRIPE_PK || 4242;
+const PORT = process.env.PORT || 4242;
 app.listen(PORT, () => console.log(`Node server listening on port ${PORT}`));

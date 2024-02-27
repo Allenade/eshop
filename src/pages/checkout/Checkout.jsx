@@ -16,10 +16,10 @@ import {
 import { toast } from "react-toastify";
 import CheckoutFom from "../../components/checkoutForm/CheckoutFom";
 
-const stripePromise = loadStripe(import.meta.env.VITE_APP_STRIPE_PK);
+const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PRIVATE_KEY);
 
 const Checkout = () => {
-  const [message, setMessage] = useState("initializing checkout");
+  const [message, setMessage] = useState("initializing checkout...");
   const [clientSecret, setClientSecret] = useState("");
   const cartItems = useSelector(selectCartItems);
   const totalAmount = useSelector(selectCartTotalAmount);
@@ -63,7 +63,9 @@ const Checkout = () => {
       .catch((error) => {
         setMessage("Failed to initialize checkout");
         toast.error("Something went wrong!!!");
+        console.log(error, "error bit");
       });
+    console.log(shippingAddress, billingAddress, customerEmail, cartItems);
   }, []);
 
   const appearance = {
