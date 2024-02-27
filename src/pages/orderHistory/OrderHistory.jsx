@@ -1,19 +1,32 @@
-import { useEffect } from "react";
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable no-unused-vars */
+import { useEffect, useState } from "react";
 import useFetchCollection from "../../customHooks/useFetchCollection";
 import styles from "./OrderHistory.module.scss";
 import { useDispatch, useSelector } from "react-redux";
 import { STORE_ORDERS, selectOrderHistory } from "../../slice/orderSlice";
 import { selectUserID } from "../../slice/authSlice";
 import Loader from "../../components/loader/Loader";
+import { collection, getDocs, orderBy, query } from "firebase/firestore";
+import { db } from "../../firebase/config";
+import { toast } from "react-toastify";
+
+
 const OrderHistory = () => {
   const { data, isLoading } = useFetchCollection("orders");
   const orders = useSelector(selectOrderHistory);
-  const userID = useSelector(selectUserID);
-  // console.log(data);
+  console.log(orders);
   const dispatch = useDispatch();
+
+
   useEffect(() => {
-    dispatch(STORE_ORDERS(data));
+    dispatch(STORE_ORDERS({
+      orderHistory: data
+    }));
   }, [dispatch, data]);
+
+
+
   return (
     <section>
       <div className={`container ${styles.order}`}>
@@ -25,7 +38,7 @@ const OrderHistory = () => {
         <>
           {isLoading && <Loader />}
           <div className={styles.table}>
-            {orders.length === 0 ? (
+            {orders?.length === 0 ? (
               <p>No order found</p>
             ) : (
               <table>
@@ -39,7 +52,7 @@ const OrderHistory = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {orders.map((order, index) => {
+                  {orders?.map((order, index) => {
                     const {
                       id,
                       orderDate,
