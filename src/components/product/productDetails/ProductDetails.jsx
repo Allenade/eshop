@@ -12,38 +12,45 @@ import {
   DECREASE_CART,
   selectCartItems,
 } from "../../../slice/cartSlice";
-
+import useFetchCollection from "../../../customHooks/useFetchCollection";
+import useFetchDocument from "../../../customHooks/useFetchDocument";
+import Card from "../../card/Card";
+import StarsRating from "react-star-rate";
 export const ProductDetails = () => {
   const { id } = useParams();
   const [product, setProduct] = useState(null);
   const dispatch = useDispatch();
   const cartItems = useSelector(selectCartItems);
-
+  const { document } = useFetchDocument("products", id);
   const cart = cartItems.find((cart) => cart.id === id);
+  const { data } = useFetchCollection("reviews");
+
+  const filterReviews = data.filter((review) => review.productID === id);
   const isCartAdded = cartItems.findIndex((cart) => {
     return cart.id === id;
   });
 
   useEffect(() => {
-    getProduct();
-  }, []);
+    // getProduct();
+    setProduct(document);
+  }, [document]);
 
-  async function getProduct() {
-    console.log("Getting product");
-    const docRef = doc(db, "products", id);
-    const docSnap = await getDoc(docRef);
+  // async function getProduct() {
+  //   console.log("Getting product");
+  //   const docRef = doc(db, "products", id);
+  //   const docSnap = await getDoc(docRef);
 
-    if (docSnap.exists()) {
-      // console.log("Document data:", docSnap.data());
-      const obj = {
-        id: id,
-        ...docSnap.data(),
-      };
-      setProduct(obj);
-    } else {
-      toast.error("product not found");
-    }
-  }
+  //   if (docSnap.exists()) {
+  //     // console.log("Document data:", docSnap.data());
+  //     const obj = {
+  //       id: id,
+  //       ...docSnap.data(),
+  //     };
+  //     setProduct(obj);
+  //   } else {
+  //     toast.error("product not found");
+  //   }
+  // }
   const addToCart = (product) => {
     dispatch(ADD_TO_CART(product));
     dispatch(CALCULATE_TOTAL_QUANTITY());
@@ -112,6 +119,35 @@ export const ProductDetails = () => {
             </div>
           </>
         )}
+        <Card cardClass={styles.card}>
+          <h3>Product Reviews</h3>
+          <div>
+            {filterReviews.length === 0 ? (
+              <p>There are no reviews for this product yet.</p>
+            ) : (
+              <>
+                {filteredReviews.map((item, index) => {
+                  const { rate, review, reviewDate, userName } = item;
+                  return (
+                    <>
+                      <div key={index} className={styles.review}>
+                        <StarsRating value={rate} />
+                        <p>{review}</p>
+                        <span>
+                          <b>{reviewDate}</b>
+                          <br />
+                        </span>
+                        <span>
+                          <b>by {userName}</b>
+                        </span>
+                      </div>
+                    </>
+                  );
+                })}
+              </>
+            )}
+          </div>
+        </Card>
       </div>
     </section>
   );

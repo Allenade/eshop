@@ -10,23 +10,25 @@ import Loader from "../../components/loader/Loader";
 import { collection, getDocs, orderBy, query } from "firebase/firestore";
 import { db } from "../../firebase/config";
 import { toast } from "react-toastify";
-
+import { useNavigate } from "react-router-dom";
 
 const OrderHistory = () => {
   const { data, isLoading } = useFetchCollection("orders");
   const orders = useSelector(selectOrderHistory);
+  const userID = useSelector(selectUserID);
   console.log(orders);
   const dispatch = useDispatch();
 
+  const navigate = useNavigate();
 
   useEffect(() => {
-    dispatch(STORE_ORDERS({
-      orderHistory: data
-    }));
+    dispatch(STORE_ORDERS(data));
   }, [dispatch, data]);
 
-
-
+  const handleClick = (id) => {
+    navigate(`/order-details/${id}`);
+  };
+  const filteredOrders = orders.filter((order) => order.userID === userID);
   return (
     <section>
       <div className={`container ${styles.order}`}>
@@ -38,7 +40,7 @@ const OrderHistory = () => {
         <>
           {isLoading && <Loader />}
           <div className={styles.table}>
-            {orders?.length === 0 ? (
+            {filteredOrders.length === 0 ? (
               <p>No order found</p>
             ) : (
               <table>
@@ -52,7 +54,7 @@ const OrderHistory = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {orders?.map((order, index) => {
+                  {filteredOrders.map((order, index) => {
                     const {
                       id,
                       orderDate,
@@ -61,7 +63,7 @@ const OrderHistory = () => {
                       orderStatus,
                     } = order;
                     return (
-                      <tr key={id}>
+                      <tr key={id} onClick={() => handleClick(id)}>
                         <td>{index + 1}</td>
                         <td>
                           {orderDate} at {orderTime}

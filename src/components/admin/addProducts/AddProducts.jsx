@@ -36,7 +36,6 @@ const AddProducts = () => {
 
   const productEdit = products?.find((item) => item.id === id);
 
-  
   const [product, setProduct] = useState(() => {
     const newState = detectForm(
       id,
@@ -62,12 +61,12 @@ const AddProducts = () => {
     setProduct({ ...product, [name]: value });
   }
 
- async  function handleImageChange(e) {
+  async function handleImageChange(e) {
     const file = e.target.files[0];
     // console.log(file);
     const storageRef = ref(storage, `e-shop/${Date.now()}${file.name}`);
     const uploadTask = uploadBytesResumable(storageRef, file);
-// https://firebasestorage.googleapis.com/v0/b/eshop-6e4a9.appspot.com/o/e-shop%2F1706486140895Screenshot%20from%202024-01-26%2013-39-45.png?alt=media&token=47f05b82-5e3c-4f5e-a527-247a7f701158
+    // https://firebasestorage.googleapis.com/v0/b/eshop-6e4a9.appspot.com/o/e-shop%2F1706486140895Screenshot%20from%202024-01-26%2013-39-45.png?alt=media&token=47f05b82-5e3c-4f5e-a527-247a7f701158
     uploadTask.on(
       "state_changed",
       (snapshot) => {
@@ -99,7 +98,7 @@ const AddProducts = () => {
     // console.log(product);
     try {
       // Add a new document with a generated id.
-       await addDoc(collection(db, "products"), {
+      await addDoc(collection(db, "products"), {
         name: product.name,
         imageURL: product.imageURL,
         price: Number(product.price),
@@ -263,6 +262,7 @@ const AddProducts = () => {
           </form>
         </Card>
       </div>
+      {/* <ChangeOrderStatus /> */}
     </>
   );
 };
