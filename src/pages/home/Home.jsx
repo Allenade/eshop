@@ -9,17 +9,17 @@ const Home = () => {
   const url = window.location.href;
   // alert(url);
 
-  function scrollProducts() {
-    if (url.includes("#product"))
-      window.scrollTo({
-        top: 700,
-        behavior: "smooth",
-      });
-    return;
-  }
   useEffect(() => {
+    function scrollProducts() {
+      if (url.includes("#product"))
+        window.scrollTo({
+          top: 700,
+          behavior: "smooth",
+        });
+      return;
+    }
     scrollProducts();
-  }, []);
+  }, [url]);
   return (
     <div>
       <Slider />

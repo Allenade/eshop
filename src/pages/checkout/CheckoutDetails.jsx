@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styles from "./CheckoutDetails.module.scss";
 import Card from "../../components/card/Card";
 import { CountryDropdown } from "react-country-region-selector";
@@ -26,6 +26,11 @@ const CheckoutDetails = () => {
   const [billingAddress, setBillingAddress] = useState({
     ...initialAddressState,
   });
+
+  // payment option
+  const [showPaymentOptions, setShowPaymentOptions] = useState(false);
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(null);
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const handleShipping = (e) => {
@@ -38,13 +43,35 @@ const CheckoutDetails = () => {
 
     setBillingAddress({ ...billingAddress, [name]: value });
   };
+  // const handleSubmit = (e) => {
+  //   e.preventDefault();
+  //   dispatch(SAVE_SHIPPING_ADDRESS(shippingAddress));
+  //   dispatch(SAVE_BILLING_ADDRESS(billingAddress));
+  //   navigate("/checkout");
+  // };
+  // payment method
+
+  const handlePaymentMethodSelect = (method) => {
+    setSelectedPaymentMethod(method);
+  };
   const handleSubmit = (e) => {
     e.preventDefault();
     dispatch(SAVE_SHIPPING_ADDRESS(shippingAddress));
     dispatch(SAVE_BILLING_ADDRESS(billingAddress));
-    navigate("/checkout");
+    setShowPaymentOptions(true); // Show payment options after saving addresses
   };
+  useEffect(() => {
+    if (selectedPaymentMethod) {
+      // Redirect to payment page based on selected method
+      if (selectedPaymentMethod === "card") {
+        navigate("/checkout/card-payment");
+      } else if (selectedPaymentMethod === "bitcoin") {
+        navigate("/checkout/bitcoin-payment");
+      }
+    }
+  }, [selectedPaymentMethod]);
 
+  // end of payment method
   return (
     <section>
       <div className={`container ${styles.checkout}`}>
@@ -209,7 +236,21 @@ const CheckoutDetails = () => {
                 value={shippingAddress.phone}
                 onChange={(e) => handleShipping(e)}
               />
-              <button type="submit" className="--btn --btn-primary ">
+              {/* <button type="submit" className="--btn --btn-primary ">
+                Proceed To Checkout
+              </button> */}
+              {showPaymentOptions && (
+                <div className={styles.paymentOptions}>
+                  <h3>Select Payment Method</h3>
+                  <button onClick={() => handlePaymentMethodSelect("card")}>
+                    Pay with Card
+                  </button>
+                  <button onClick={() => handlePaymentMethodSelect("bitcoin")}>
+                    Pay with Bitcoin
+                  </button>
+                </div>
+              )}
+              <button type="submit" className="--btn --btn-primary">
                 Proceed To Checkout
               </button>
             </Card>

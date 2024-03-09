@@ -1,8 +1,5 @@
-import { doc, getDoc } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { db } from "../../../firebase/config";
-import { toast } from "react-toastify";
 import styles from "./ProductDetails.module.scss";
 import spinnerImg from "../../../assets/spinner.jpg";
 import { useDispatch, useSelector } from "react-redux";
@@ -68,7 +65,7 @@ export const ProductDetails = () => {
         <div>
           <Link to="/#products"> Back TO Products</Link>
         </div>
-        {product === null ? (
+        {product == null ? (
           <img src={spinnerImg} alt="Loading.." style={{ width: "50px" }} />
         ) : (
           <>

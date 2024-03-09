@@ -27,7 +27,7 @@ export const ProductList = ({ products }) => {
 
   const indexOfLastProduct = currentPage * productsPerPage;
   const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
-  const currnetProducts = filteredProducts.slice(
+  const currentProducts = filteredProducts.slice(
     indexOfFirstProduct,
     indexOfLastProduct
   );
@@ -75,7 +75,7 @@ export const ProductList = ({ products }) => {
           <p>No producr found.</p>
         ) : (
           <>
-            {currnetProducts.map((product) => {
+            {currentProducts.map((product) => {
               return (
                 <div key={product.id}>
                   <ProductItem {...product} grid={grid} product={product} />
