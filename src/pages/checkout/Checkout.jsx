@@ -16,7 +16,10 @@ import {
 import { toast } from "react-toastify";
 import CheckoutFom from "../../components/checkoutForm/CheckoutFom";
 
-const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PRIVATE_KEY);
+// const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PRIVATE_KEY);
+const stripePromise = loadStripe(
+  "pk_test_51OkF0JJvivbgKHtpGiltr542a1MNisGxSEfMIcHzXVxvi8jQ5YZIiJsu6aQl63zo7AGlVWBAUFfCAJOAZWtE5Qw900rbbjgmCK"
+);
 
 const Checkout = () => {
   const [message, setMessage] = useState("initializing checkout...");
