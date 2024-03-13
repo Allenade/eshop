@@ -40,25 +40,33 @@ const Checkout = () => {
   useEffect(() => {
     // http://localhost:4242/create-payment-intent
     // Create PaymentIntent as soon as the page loads
-    fetch("http://localhost:4242/create-payment-intent", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        items: cartItems,
-        userEmail: customerEmail,
-        shipping: shippingAddress,
-        billing: billingAddress,
-        description,
-      }),
-    })
+    fetch(
+      "https://reactbackend-ccju.onrender.com/stripe/create-checkout-session",
+      // "http://localhost:4242/create-payment-intent",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          items: cartItems,
+          userEmail: customerEmail,
+          shipping: shippingAddress,
+          // totalPrice: totalAmount,
+          billing: billingAddress,
+          description,
+        }),
+      }
+    )
       .then((res) => {
         if (res.ok) {
+          console.log(res);
           return res.json();
         }
         return res.json().then((json) => Promise.reject(json));
       })
       .then((data) => {
-        setClientSecret(data.clientSecret);
+        console.log(data);
+        // setClientSecret(data.clientSecret);
+        setClientSecret(data.client_secret);
       })
       .catch((error) => {
         setMessage("Failed to initialize checkout");

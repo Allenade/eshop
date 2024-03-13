@@ -14,6 +14,7 @@ import { useNavigate } from "react-router-dom";
 
 const OrderHistory = () => {
   const { data, isLoading } = useFetchCollection("orders");
+  console.log(data);
   const orders = useSelector(selectOrderHistory);
   const userID = useSelector(selectUserID);
   console.log(orders);
