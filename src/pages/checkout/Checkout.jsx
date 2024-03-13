@@ -50,7 +50,7 @@ const Checkout = () => {
           items: cartItems,
           userEmail: customerEmail,
           shipping: shippingAddress,
-          // totalPrice: totalAmount,
+          totalPrice: totalAmount,
           billing: billingAddress,
           description,
         }),
