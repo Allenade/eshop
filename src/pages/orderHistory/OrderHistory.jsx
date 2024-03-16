@@ -33,12 +33,8 @@ const OrderHistory = () => {
     navigate(`/order-details/${id}`);
   };
   // const filteredOrders = orders.filter((order) => order.userID === userID);
-  const bitcoinOrders = orders.filter(
-    (order) => order.userID === userID && order.paymentMethod
-  );
-  const cardOrders = orders.filter(
-    (order) => order.userID === userID && order.paymentMethod
-  );
+  const bitcoinOrders = orders.filter((order) => order.userID === userID);
+  const cardOrders = orders.filter((order) => order.userID === userID);
 
   return (
     <section>
