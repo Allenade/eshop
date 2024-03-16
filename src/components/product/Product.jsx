@@ -19,7 +19,7 @@ export const Product = () => {
   const [showFilter, setShowFilter] = useState(false);
   const products = useSelector(selectProducts);
   const dispatch = useDispatch();
-  console.log(data)
+  console.log(data);
   useEffect(() => {
     dispatch(
       STORE_PRODUCTS({

@@ -2,13 +2,22 @@ import { useEffect, useState } from "react";
 import styles from "./CheckoutDetails.module.scss";
 import Card from "../../components/card/Card";
 import { CountryDropdown } from "react-country-region-selector";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   SAVE_BILLING_ADDRESS,
   SAVE_SHIPPING_ADDRESS,
 } from "../../slice/checkoutSlice";
 import { useNavigate } from "react-router-dom";
 import CheckoutSummary from "../../components/checkoutSummary/CheckoutSummary";
+import { selectEmail, selectUserID } from "../../slice/authSlice";
+import { addDoc, collection } from "firebase/firestore";
+import { db } from "../../firebase/config";
+import { toast } from "react-toastify";
+import {
+  CLEAR_CART,
+  selectCartItems,
+  selectCartTotalAmount,
+} from "../../slice/cartSlice";
 const initialAddressState = {
   name: "",
   line1: "",
@@ -28,8 +37,13 @@ const CheckoutDetails = () => {
   });
 
   // payment option
-  // const [showPaymentOptions, setShowPaymentOptions] = useState(false);
-  // const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(null);
+  const [showPaymentOptions, setShowPaymentOptions] = useState(false);
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(null);
+
+  const userEmail = useSelector(selectEmail);
+  const cartItems = useSelector(selectCartItems);
+  const cartTotalAmount = useSelector(selectCartTotalAmount);
+  const userID = useSelector(selectUserID);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -43,33 +57,83 @@ const CheckoutDetails = () => {
 
     setBillingAddress({ ...billingAddress, [name]: value });
   };
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    dispatch(SAVE_SHIPPING_ADDRESS(shippingAddress));
-    dispatch(SAVE_BILLING_ADDRESS(billingAddress));
-    navigate("/checkout");
-  };
-  // payment method
-
-  // const handlePaymentMethodSelect = (method) => {
-  //   setSelectedPaymentMethod(method);
-  // };
   // const handleSubmit = (e) => {
   //   e.preventDefault();
   //   dispatch(SAVE_SHIPPING_ADDRESS(shippingAddress));
   //   dispatch(SAVE_BILLING_ADDRESS(billingAddress));
-  //   setShowPaymentOptions(true); // Show payment options after saving addresses
+  //   navigate("/checkout");
   // };
-  // useEffect(() => {
-  //   if (selectedPaymentMethod) {
-  //     // Redirect to payment page based on selected method
-  //     if (selectedPaymentMethod === "card") {
-  //       navigate("/checkout/card-payment");
-  //     } else if (selectedPaymentMethod === "bitcoin") {
-  //       navigate("/checkout/bitcoin-payment");
-  //     }
-  //   }
-  // }, [selectedPaymentMethod]);
+  // payment method
+
+  // bitcoin ? function
+
+  const registerBitcoinOrder = async () => {
+    // Access data from store using useSelector
+    const today = new Date();
+    const date = today.toDateString();
+    const time = today.toLocaleTimeString();
+    const orderConfig = {
+      userEmail,
+      userID,
+      orderDate: date,
+      orderTime: time,
+      orderAmount: cartTotalAmount,
+      orderStatus: "order Place...",
+      cartItems,
+      shippingAddress,
+      // createAt: Timestamp.now().toDate(),
+    };
+    try {
+      await addDoc(collection(db, "orders"), orderConfig);
+      toast.success("Order Saved");
+      dispatch(CLEAR_CART(cartItems));
+      navigate("/checkout-success");
+      // Redirect to success page after saving order
+      // window.location.href = "http://localhost:5173/checkout-success";
+    } catch (error) {
+      console.error("Error adding document: ", error);
+      toast.error("Failed to save order");
+    }
+  };
+
+  const showBitcoinWalletAddress = () => {
+    const walletAddress = "your_bitcoin_wallet_address"; // Replace with your actual address
+    alert(`Please send your Bitcoin payment to: ${walletAddress}`);
+  };
+
+  // ... rest of your code
+
+  // Updated handlePaymentMethodSelect
+  const handlePaymentMethodSelect = (method) => {
+    setSelectedPaymentMethod(method);
+    // If Bitcoin is selected, register the order and show wallet address
+    if (method === "bitcoin") {
+      registerBitcoinOrder();
+      showBitcoinWalletAddress();
+    }
+  };
+
+  // end of bitcoin function
+
+  // const handlePaymentMethodSelect = (method) => {
+  //   setSelectedPaymentMethod(method);
+  // };
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    dispatch(SAVE_SHIPPING_ADDRESS(shippingAddress));
+    dispatch(SAVE_BILLING_ADDRESS(billingAddress));
+    setShowPaymentOptions(true); // Show payment options after saving addresses
+  };
+  useEffect(() => {
+    if (selectedPaymentMethod) {
+      // Redirect to payment page based on selected method
+      if (selectedPaymentMethod === "card") {
+        navigate("/checkout");
+      } else if (selectedPaymentMethod === "bitcoin") {
+        navigate("/order-history");
+      }
+    }
+  }, [selectedPaymentMethod]);
 
   // end of payment method
   return (
@@ -236,10 +300,10 @@ const CheckoutDetails = () => {
                 value={shippingAddress.phone}
                 onChange={(e) => handleShipping(e)}
               />
-              <button type="submit" className="--btn --btn-primary ">
+              {/* <button type="submit" className="--btn --btn-primary ">
                 Proceed To Checkout
-              </button>
-              {/* {showPaymentOptions && (
+              </button> */}
+              {showPaymentOptions && (
                 <div className={styles.paymentOptions}>
                   <h3>Select Payment Method</h3>
                   <button onClick={() => handlePaymentMethodSelect("card")}>
@@ -252,7 +316,7 @@ const CheckoutDetails = () => {
               )}
               <button type="submit" className="--btn --btn-primary">
                 Proceed To Checkout
-              </button> */}
+              </button>
             </Card>
           </div>
           <div>
