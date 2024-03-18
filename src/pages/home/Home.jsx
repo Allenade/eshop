@@ -2,6 +2,7 @@ import Slider from "../../components/slider/slider";
 
 import { Product } from "../../components/product/Product";
 import { useEffect } from "react";
+import { FloatingWhatsApp } from "react-floating-whatsapp";
 
 // import AdminRoute from "../../components/adminRoute/AdminRoute";
 
@@ -24,6 +25,11 @@ const Home = () => {
     <div>
       <Slider />
       <Product />
+      <FloatingWhatsApp
+        phoneNumber="+12402341318"
+        accountName="Your Account Name"
+        position="left"
+      />
     </div>
   );
 };
