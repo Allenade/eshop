@@ -3,6 +3,7 @@ import styles from "./CheckoutDetails.module.scss";
 import Card from "../../components/card/Card";
 import { CountryDropdown } from "react-country-region-selector";
 import { useDispatch, useSelector } from "react-redux";
+// import bitcoinStyles from "./BitcoinPopup.module.scss";
 import {
   SAVE_BILLING_ADDRESS,
   SAVE_SHIPPING_ADDRESS,
@@ -78,7 +79,9 @@ const CheckoutDetails = () => {
       orderDate: date,
       orderTime: time,
       orderAmount: cartTotalAmount,
-      orderStatus: "order Place...",
+      orderStatus: "Order Placed",
+      paymentMethod: "Bitcoin", // Added payment method
+      // walletAddress: "bc1qf95sythpec9j28y748jzg5pc9ze4tp8m089gsf",
       cartItems,
       shippingAddress,
       // createAt: Timestamp.now().toDate(),
@@ -96,22 +99,101 @@ const CheckoutDetails = () => {
     }
   };
 
+  // const showBitcoinWalletAddress = () => {
+  //   const walletAddress = "your_bitcoin_wallet_address"; // Replace with your actual address
+  //   alert(`Please send your Bitcoin payment to: ${walletAddress}`);
+  // };
+
   const showBitcoinWalletAddress = () => {
-    const walletAddress = "your_bitcoin_wallet_address"; // Replace with your actual address
+    const walletAddress = "bc1qf95sythpec9j28y748jzg5pc9ze4tp8m089gsf"; // Replace with your actual address
+
+    // Show alert with wallet address
     alert(`Please send your Bitcoin payment to: ${walletAddress}`);
+
+    // Function to copy wallet address to clipboard
+    const copyToClipboard = (text) => {
+      navigator.clipboard.writeText(text).then(
+        () => {
+          alert("Bitcoin wallet address copied to clipboard!\nCopied");
+        },
+        () => {
+          alert("Failed to copy address!");
+        }
+      );
+    };
+
+    // Copy wallet address when the alert is closed
+    setTimeout(() => {
+      copyToClipboard(walletAddress);
+    }, 1000); // Adjust the delay as needed
   };
 
-  // ... rest of your code
-
-  // Updated handlePaymentMethodSelect
   const handlePaymentMethodSelect = (method) => {
     setSelectedPaymentMethod(method);
-    // If Bitcoin is selected, register the order and show wallet address
     if (method === "bitcoin") {
       registerBitcoinOrder();
       showBitcoinWalletAddress();
     }
   };
+  // const showBitcoinWalletAddress = () => {
+  //   const walletAddress = "your_bitcoin_wallet_address"; // Replace with your actual address
+
+  //   // Create the popup container
+  //   const popup = document.createElement("div");
+  //   popup.classList.add(bitcoinStyles["popup-container"]); // Use BitcoinPopup styles
+
+  //   // Title
+  //   const title = document.createElement("h2");
+  //   title.classList.add(bitcoinStyles["popup-title"]); // Use BitcoinPopup styles
+  //   title.textContent = "Please send your Bitcoin payment to:";
+
+  //   // Wallet address
+  //   const walletElement = document.createElement("p");
+  //   walletElement.classList.add(bitcoinStyles["wallet-address"]); // Use BitcoinPopup styles
+  //   walletElement.textContent = walletAddress;
+
+  //   // Copy button
+  //   const copyBtn = document.createElement("button");
+  //   copyBtn.classList.add(bitcoinStyles["copy-btn"]); // Use BitcoinPopup styles
+  //   copyBtn.textContent = "Copy Address";
+
+  //   // Append elements to the popup container
+  //   popup.appendChild(title);
+  //   popup.appendChild(walletElement);
+  //   popup.appendChild(copyBtn);
+
+  //   // Append the popup to the body
+  //   document.body.appendChild(popup);
+
+  //   // Function to copy wallet address to clipboard
+  //   const copyToClipboard = (text) => {
+  //     navigator.clipboard.writeText(text).then(
+  //       () => {
+  //         alert("Bitcoin wallet address copied to clipboard!");
+  //       },
+  //       () => {
+  //         alert("Failed to copy address!");
+  //       }
+  //     );
+  //   };
+
+  //   // Add click event listener to copy button
+  //   copyBtn.addEventListener("click", () => {
+  //     copyToClipboard(walletAddress);
+  //   });
+  // };
+
+  // ... rest of your code
+
+  // Updated handlePaymentMethodSelect
+  // const handlePaymentMethodSelect = (method) => {
+  //   setSelectedPaymentMethod(method);
+  //   // If Bitcoin is selected, register the order and show wallet address
+  //   if (method === "bitcoin") {
+  //     registerBitcoinOrder();
+  //     showBitcoinWalletAddress();
+  //   }
+  // };
 
   // end of bitcoin function
 
