@@ -63,6 +63,7 @@ const CheckoutForm = () => {
       orderTime: time,
       orderAmount: cartTotalAmount,
       orderStatus: "order Place...",
+      paymentMethod: "Card",
       cartItems,
       shippingAddress,
       // createAt: Timestamp.now().toDate(),

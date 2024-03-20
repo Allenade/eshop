@@ -388,12 +388,38 @@ const CheckoutDetails = () => {
               {showPaymentOptions && (
                 <div className={styles.paymentOptions}>
                   <h3>Select Payment Method</h3>
-                  <button onClick={() => handlePaymentMethodSelect("card")}>
+                  <button
+                    className={`${styles.paymentButton} --btn --btn-primary`}
+                    onClick={() => handlePaymentMethodSelect("card")}
+                  >
                     Pay with Card
                   </button>
-                  <button onClick={() => handlePaymentMethodSelect("bitcoin")}>
+                  <button
+                    className={`${styles.paymentButton} --btn --btn-danger`}
+                    onClick={() => handlePaymentMethodSelect("bitcoin")}
+                  >
                     Pay with Bitcoin
                   </button>
+                  <div className={styles.paymentInfo}>
+                    <p>
+                      If you want to pay with Cash App,{" "}
+                      <a href="YOUR_CASH_APP_LINK_HERE" target="_blank">
+                        use this link
+                      </a>{" "}
+                      to know how.
+                    </p>
+                  </div>
+                  <div className={styles.videoContainer}>
+                    <iframe
+                      width="560"
+                      height="315"
+                      src="https://www.youtube.com/embed/fZbW8C5T_9g?rel=0"
+                      title="YouTube video player"
+                      // frameborder="0"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowfullscreen
+                    ></iframe>
+                  </div>
                 </div>
               )}
               <button type="submit" className="--btn --btn-primary">
