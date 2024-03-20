@@ -402,11 +402,11 @@ const CheckoutDetails = () => {
                   </button>
                   <div className={styles.paymentInfo}>
                     <p>
-                      If you want to pay with Cash App,{" "}
+                      For Cash App payments, please use the link below to access
+                      detailed instructions:
                       <a href="YOUR_CASH_APP_LINK_HERE" target="_blank">
-                        use this link
-                      </a>{" "}
-                      to know how.
+                        Cash App Payment Instructions
+                      </a>
                     </p>
                   </div>
                   <div className={styles.videoContainer}>
