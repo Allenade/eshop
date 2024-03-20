@@ -135,71 +135,7 @@ const CheckoutDetails = () => {
       showBitcoinWalletAddress();
     }
   };
-  // const showBitcoinWalletAddress = () => {
-  //   const walletAddress = "your_bitcoin_wallet_address"; // Replace with your actual address
 
-  //   // Create the popup container
-  //   const popup = document.createElement("div");
-  //   popup.classList.add(bitcoinStyles["popup-container"]); // Use BitcoinPopup styles
-
-  //   // Title
-  //   const title = document.createElement("h2");
-  //   title.classList.add(bitcoinStyles["popup-title"]); // Use BitcoinPopup styles
-  //   title.textContent = "Please send your Bitcoin payment to:";
-
-  //   // Wallet address
-  //   const walletElement = document.createElement("p");
-  //   walletElement.classList.add(bitcoinStyles["wallet-address"]); // Use BitcoinPopup styles
-  //   walletElement.textContent = walletAddress;
-
-  //   // Copy button
-  //   const copyBtn = document.createElement("button");
-  //   copyBtn.classList.add(bitcoinStyles["copy-btn"]); // Use BitcoinPopup styles
-  //   copyBtn.textContent = "Copy Address";
-
-  //   // Append elements to the popup container
-  //   popup.appendChild(title);
-  //   popup.appendChild(walletElement);
-  //   popup.appendChild(copyBtn);
-
-  //   // Append the popup to the body
-  //   document.body.appendChild(popup);
-
-  //   // Function to copy wallet address to clipboard
-  //   const copyToClipboard = (text) => {
-  //     navigator.clipboard.writeText(text).then(
-  //       () => {
-  //         alert("Bitcoin wallet address copied to clipboard!");
-  //       },
-  //       () => {
-  //         alert("Failed to copy address!");
-  //       }
-  //     );
-  //   };
-
-  //   // Add click event listener to copy button
-  //   copyBtn.addEventListener("click", () => {
-  //     copyToClipboard(walletAddress);
-  //   });
-  // };
-
-  // ... rest of your code
-
-  // Updated handlePaymentMethodSelect
-  // const handlePaymentMethodSelect = (method) => {
-  //   setSelectedPaymentMethod(method);
-  //   // If Bitcoin is selected, register the order and show wallet address
-  //   if (method === "bitcoin") {
-  //     registerBitcoinOrder();
-  //     showBitcoinWalletAddress();
-  //   }
-  // };
-
-  // end of bitcoin function
-
-  // const handlePaymentMethodSelect = (method) => {
-  //   setSelectedPaymentMethod(method);
-  // };
   const handleSubmit = (e) => {
     e.preventDefault();
     dispatch(SAVE_SHIPPING_ADDRESS(shippingAddress));
@@ -400,7 +336,7 @@ const CheckoutDetails = () => {
                   >
                     Pay with Bitcoin
                   </button>
-                  <div className={styles.paymentInfo}>
+                  {/* <div className={styles.paymentInfo}>
                     <p>
                       For Cash App payments, please use the link below to access
                       detailed instructions:
@@ -419,7 +355,7 @@ const CheckoutDetails = () => {
                       allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                       allowfullscreen
                     ></iframe>
-                  </div>
+                  </div> */}
                 </div>
               )}
               <button type="submit" className="--btn --btn-primary">
