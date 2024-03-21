@@ -121,21 +121,23 @@ const CheckoutDetails = () => {
   //       }
   //     );
   //   };
-const showBitcoinWalletAddress = async () => {
-  try {
-    const walletAddress = "bc1qf95sythpec9j28y748jzg5pc9ze4tp8m089gsf";
-    alert(`Please send your Bitcoin payment to: ${walletAddress}`);
-    await navigator.clipboard.writeText(walletAddress);
-    alert("Bitcoin wallet address copied to clipboard!");
-  } catch (error) {
-    console.error("Error copying address:", error);
-    alert("Failed to copy address! Please copy manually.");
-  }
-};
-    // Copy wallet address when the alert is closed
-    setTimeout(() => {
-      copyToClipboard(walletAddress);
-    }, 1000); // Adjust the delay as needed
+
+  //   // Copy wallet address when the alert is closed
+  //   setTimeout(() => {
+  //     copyToClipboard(walletAddress);
+  //   }, 1000); // Adjust the delay as needed
+  // };
+
+  const showBitcoinWalletAddress = async () => {
+    try {
+      const walletAddress = "bc1qf95sythpec9j28y748jzg5pc9ze4tp8m089gsf";
+      alert(`Please send your Bitcoin payment to: ${walletAddress}`);
+      await navigator.clipboard.writeText(walletAddress);
+      alert("Bitcoin wallet address copied to clipboard!");
+    } catch (error) {
+      console.error("Error copying address:", error);
+      alert("Failed to copy address! Please copy manually.");
+    }
   };
 
   const handlePaymentMethodSelect = (method) => {
