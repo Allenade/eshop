@@ -348,7 +348,7 @@ const CheckoutDetails = () => {
                   >
                     Pay with Bitcoin
                   </button>
-                  {/* <div className={styles.paymentInfo}>
+                  <div className={styles.paymentInfo}>
                     <p>
                       For Cash App payments, please use the link below to access
                       detailed instructions:
@@ -367,7 +367,7 @@ const CheckoutDetails = () => {
                       allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                       allowfullscreen
                     ></iframe>
-                  </div> */}
+                  </div>
                 </div>
               )}
               <button type="submit" className="--btn --btn-primary">
