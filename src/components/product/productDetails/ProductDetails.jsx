@@ -7,7 +7,6 @@ import {
   ADD_TO_CART,
   CALCULATE_TOTAL_QUANTITY,
   DECREASE_CART,
-  UPDATE_SELECTED_PRICE,
   selectCartItems,
 } from "../../../slice/cartSlice";
 import useFetchCollection from "../../../customHooks/useFetchCollection";
@@ -50,13 +49,6 @@ export const ProductDetails = () => {
     dispatch(CALCULATE_TOTAL_QUANTITY());
   };
 
-  const handleWeightChange = (e) => {
-    const selectedWeight = weightOptions.find(
-      (option) => option.weight === parseFloat(e.target.value)
-    );
-    dispatch(UPDATE_SELECTED_PRICE(selectedWeight)); // Dispatch selectedPrice to the store
-  };
-
   const decreaseCart = () => {
     dispatch(DECREASE_CART(product));
     dispatch(CALCULATE_TOTAL_QUANTITY());
@@ -93,8 +85,14 @@ export const ProductDetails = () => {
                 </p>
                 {/* Weight options selection */}
                 <select
-                  value={selectedPrice?.weight || ""}
-                  onChange={handleWeightChange}
+                  value={selectedPrice?.weight}
+                  onChange={(e) =>
+                    setSelectedPrice(
+                      weightOptions.find(
+                        (option) => option.weight === parseFloat(e.target.value)
+                      )
+                    )
+                  }
                 >
                   <option value="">Select Weight</option>
                   {weightOptions.map((option) => (
