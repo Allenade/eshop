@@ -87,9 +87,9 @@ const cartSlice = createSlice({
     CALCULATE_SUBTOTAL(state, action) {
       let totalAmount = 0;
       state.cartItems.forEach((item) => {
-        const { selectedPrice, price, cartQuantity } = item;
+        const { selectedPrice, price, cartQuantity, totalCost,  } = item;
         const itemPrice = selectedPrice ? selectedPrice.price : price; // Use selectedPrice if available, else use default price
-        totalAmount += itemPrice * cartQuantity;
+        totalAmount += totalCost * cartQuantity;
       });
       state.cartTotalAmount = totalAmount;
     },
