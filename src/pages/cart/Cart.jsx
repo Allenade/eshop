@@ -27,7 +27,7 @@ const Cart = () => {
   const navigate = useNavigate();
   console.log(cartTotalAmount);
   console.log(cartTotalQuantity);
-  // console.log(cartItems);
+  console.log(cartItems);
   const increaseCart = (cart) => {
     dispatch(ADD_TO_CART(cart));
     dispatch(CALCULATE_SUBTOTAL()); // Dispatch after adding to cart
@@ -76,7 +76,7 @@ const Cart = () => {
     <section>
       <div className={`container ${styles.table}`}>
         <h2>Shopping Cart</h2>
-        {cartItems.length === 0 ? (
+        {cartItems && cartItems.length === 0 ? (
           <>
             <p>Your cart is currently empty.</p>
             <br />
@@ -111,7 +111,7 @@ const Cart = () => {
                         style={{ width: "100px" }}
                       />
                     </td>
-                    <td>{`$${totalCost.toFixed(2)}`}</td>
+                    <td>{`$${totalCost?.toFixed(2)}`}</td>
 
                     <td>
                       <div className={styles.count}>
@@ -132,7 +132,7 @@ const Cart = () => {
                         </button>
                       </div>
                     </td>
-                    <td>{`$${(totalCost * cartQuantity).toFixed(2)}`}</td>
+                    <td>{`$${(totalCost * cartQuantity)?.toFixed(2)}`}</td>
                     <td className={styles.icon}>
                       <FaTrashAlt
                         size={19}
