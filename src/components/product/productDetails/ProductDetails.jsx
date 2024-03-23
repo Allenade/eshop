@@ -7,53 +7,57 @@ import {
   ADD_TO_CART,
   CALCULATE_TOTAL_QUANTITY,
   DECREASE_CART,
+  UPDATE_SELECTED_PRICE,
   selectCartItems,
 } from "../../../slice/cartSlice";
 import useFetchCollection from "../../../customHooks/useFetchCollection";
 import useFetchDocument from "../../../customHooks/useFetchDocument";
 import Card from "../../card/Card";
 import StarsRating from "react-star-rate";
+
 export const ProductDetails = () => {
   const { id } = useParams();
   const [product, setProduct] = useState(null);
+  const [selectedPrice, setSelectedPrice] = useState(null); // Store selected weight's price
   const dispatch = useDispatch();
   const cartItems = useSelector(selectCartItems);
   const { document } = useFetchDocument("products", id);
   const cart = cartItems.find((cart) => cart.id === id);
   const { data } = useFetchCollection("reviews");
-
   const filterReviews = data.filter((review) => review.productID === id);
-  const isCartAdded = cartItems.findIndex((cart) => {
-    return cart.id === id;
-  });
+  const isCartAdded = cartItems.findIndex((cart) => cart.id === id);
+  const weightOptions = [
+    { weight: 0.5, price: 200 },
+    { weight: 1.0, price: 300 },
+    { weight: 1.5, price: 400 },
+    { weight: 2.0, price: 500 },
+  ];
 
   useEffect(() => {
-    // getProduct();
     setProduct(document);
   }, [document]);
 
-  // async function getProduct() {
-  //   console.log("Getting product");
-  //   const docRef = doc(db, "products", id);
-  //   const docSnap = await getDoc(docRef);
-
-  //   if (docSnap.exists()) {
-  //     // console.log("Document data:", docSnap.data());
-  //     const obj = {
-  //       id: id,
-  //       ...docSnap.data(),
-  //     };
-  //     setProduct(obj);
-  //   } else {
-  //     toast.error("product not found");
-  //   }
-  // }
-  const addToCart = (product) => {
-    dispatch(ADD_TO_CART(product));
+  const addToCart = () => {
+    // const priceToAdd = selectedPrice ? selectedPrice.price : product.price;
+    dispatch(
+      ADD_TO_CART({
+        ...product,
+        weight: selectedPrice?.weight,
+        // totalCost: priceToAdd, // Use selected weight's price or initial price
+        totalCost: selectedPrice?.price || product.price, // Use correct price
+      })
+    );
     dispatch(CALCULATE_TOTAL_QUANTITY());
   };
 
-  const decreaseCart = (product) => {
+  const handleWeightChange = (e) => {
+    const selectedWeight = weightOptions.find(
+      (option) => option.weight === parseFloat(e.target.value)
+    );
+    dispatch(UPDATE_SELECTED_PRICE(selectedWeight)); // Dispatch selectedPrice to the store
+  };
+
+  const decreaseCart = () => {
     dispatch(DECREASE_CART(product));
     dispatch(CALCULATE_TOTAL_QUANTITY());
   };
@@ -63,7 +67,7 @@ export const ProductDetails = () => {
       <div className={`container ${styles.product}`}>
         <h2>Product Details</h2>
         <div>
-          <Link to="/#products"> Back TO Products</Link>
+          <Link to="/#products">Back TO Products</Link>
         </div>
         {product == null ? (
           <img src={spinnerImg} alt="Loading.." style={{ width: "50px" }} />
@@ -75,7 +79,11 @@ export const ProductDetails = () => {
               </div>
               <div className={styles.content}>
                 <h3>{product.name}</h3>
-                <p className={styles.proce}>{`$${product.price}`}</p>
+                <p className={styles.proce}>
+                  {selectedPrice
+                    ? `Price: $${selectedPrice.price}`
+                    : `Price: $${product.price}`}
+                </p>
                 <p>{product.desc}</p>
                 <p>
                   <b>SKU</b> {product.id}
@@ -83,33 +91,34 @@ export const ProductDetails = () => {
                 <p>
                   <b>Brand</b> {product.brand}
                 </p>
+                {/* Weight options selection */}
+                <select
+                  value={selectedPrice?.weight || ""}
+                  onChange={handleWeightChange}
+                >
+                  <option value="">Select Weight</option>
+                  {weightOptions.map((option) => (
+                    <option key={option.weight} value={option.weight}>
+                      {option.weight} kg - ${option.price}
+                    </option>
+                  ))}
+                </select>
                 <div className={styles.count}>
                   {isCartAdded < 0 ? null : (
                     <>
-                      <button
-                        className="--btn"
-                        onClick={() => decreaseCart(product)}
-                      >
+                      <button className="--btn" onClick={decreaseCart}>
                         -
                       </button>
-
                       <p>
                         <b>{cart?.cartQuantity || 0}</b>
                       </p>
-
-                      <button
-                        className="--btn"
-                        onClick={() => addToCart(product)}
-                      >
+                      <button className="--btn" onClick={addToCart}>
                         +
                       </button>
                     </>
                   )}
                 </div>
-                <button
-                  className="--btn --btn-danger"
-                  onClick={() => addToCart(product)}
-                >
+                <button className="--btn --btn-danger" onClick={addToCart}>
                   ADD TO CART
                 </button>
               </div>
@@ -123,22 +132,20 @@ export const ProductDetails = () => {
               <p>There are no reviews for this product yet.</p>
             ) : (
               <>
-                {filteredReviews.map((item, index) => {
+                {filterReviews.map((item, index) => {
                   const { rate, review, reviewDate, userName } = item;
                   return (
-                    <>
-                      <div key={index} className={styles.review}>
-                        <StarsRating value={rate} />
-                        <p>{review}</p>
-                        <span>
-                          <b>{reviewDate}</b>
-                          <br />
-                        </span>
-                        <span>
-                          <b>by {userName}</b>
-                        </span>
-                      </div>
-                    </>
+                    <div key={index} className={styles.review}>
+                      <StarsRating value={rate} />
+                      <p>{review}</p>
+                      <span>
+                        <b>{reviewDate}</b>
+                        <br />
+                      </span>
+                      <span>
+                        <b>by {userName}</b>
+                      </span>
+                    </div>
                   );
                 })}
               </>
@@ -149,3 +156,5 @@ export const ProductDetails = () => {
     </section>
   );
 };
+
+export default ProductDetails;

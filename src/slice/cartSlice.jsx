@@ -85,18 +85,25 @@ const cartSlice = createSlice({
       localStorage.setItem("cartItems", JSON.stringify(state.cartItems));
     },
     CALCULATE_SUBTOTAL(state, action) {
-      const array = [];
-      state.cartItems.map((item) => {
-        const { price, cartQuantity } = item;
-        const cartItemAmount = price * cartQuantity;
-
-        return array.push(cartItemAmount);
+      let totalAmount = 0;
+      state.cartItems.forEach((item) => {
+        const { selectedPrice, price, cartQuantity } = item;
+        const itemPrice = selectedPrice ? selectedPrice.price : price; // Use selectedPrice if available, else use default price
+        totalAmount += itemPrice * cartQuantity;
       });
-      const totalAmount = array.reduce((a, b) => {
-        return a + b;
-      }, 0);
       state.cartTotalAmount = totalAmount;
     },
+
+    UPDATE_SELECTED_PRICE(state, action) {
+      state.selectedPrice = action.payload;
+    },
+
+    //  const array = [];
+    //   state.cartItems.map((item) => {
+    //     // <-- Here's where the snippet belongs
+    //     const cartItemAmount = item.totalCost * item.cartQuantity; // Use totalCost
+    //     return array.push(cartItemAmount);
+    //   });
     CALCULATE_TOTAL_QUANTITY(state, action) {
       const array = [];
       state.cartItems.map((item) => {
@@ -124,11 +131,15 @@ export const {
   CLEAR_CART,
   CALCULATE_SUBTOTAL,
   CALCULATE_TOTAL_QUANTITY,
+  UPDATE_SELECTED_PRICE, // Add UPDATE_SELECTED_PRICE to exported actions
+
   SAVE_URL,
 } = cartSlice.actions;
 export const selectCartItems = (state) => state.cart.cartItems;
 export const selectCartTotalQuantity = (state) => state.cart.cartTotalQuantity;
 export const selectCartTotalAmount = (state) => state.cart.cartTotalAmount;
+export const selectSelectedPrice = (state) => state.cart.selectedPrice; // Add selector for selectedPrice
+
 export const selectPreviousURL = (state) => state.cart.previousURL;
 
 export default cartSlice.reducer;

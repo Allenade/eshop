@@ -17,29 +17,41 @@ import { FaTrashAlt } from "react-icons/fa";
 import Card from "../../components/card/Card";
 import { useEffect } from "react";
 import { selectisLoggedIn } from "../../slice/authSlice";
+
 const Cart = () => {
   const cartItems = useSelector(selectCartItems);
   const cartTotalAmount = useSelector(selectCartTotalAmount);
   const cartTotalQuantity = useSelector(selectCartTotalQuantity);
-
   const dispatch = useDispatch();
-
   const isLoggedIn = useSelector(selectisLoggedIn);
-
   const navigate = useNavigate();
+  console.log(cartTotalAmount);
+  console.log(cartTotalQuantity);
+  // console.log(cartItems);
   const increaseCart = (cart) => {
     dispatch(ADD_TO_CART(cart));
+    dispatch(CALCULATE_SUBTOTAL()); // Dispatch after adding to cart
+    dispatch(CALCULATE_TOTAL_QUANTITY()); // Dispatch after adding to cart
   };
+
   const decreaseCart = (cart) => {
     dispatch(DECREASE_CART(cart));
+    dispatch(CALCULATE_SUBTOTAL()); // Dispatch after decreasing from cart
+    dispatch(CALCULATE_TOTAL_QUANTITY()); // Dispatch after decreasing from cart
   };
+
   const removeFromCart = (cart) => {
     dispatch(REMOVE_FROM_CART(cart));
+    dispatch(CALCULATE_SUBTOTAL()); // Dispatch after removing from cart
+    dispatch(CALCULATE_TOTAL_QUANTITY()); // Dispatch after removing from cart
   };
 
   const clearCart = () => {
     dispatch(CLEAR_CART());
+    dispatch(CALCULATE_SUBTOTAL()); // Dispatch after clearing cart
+    dispatch(CALCULATE_TOTAL_QUANTITY()); // Dispatch after clearing cart
   };
+
   useEffect(() => {
     dispatch(CALCULATE_SUBTOTAL());
     dispatch(CALCULATE_TOTAL_QUANTITY());
@@ -50,17 +62,21 @@ const Cart = () => {
 
   const checkout = () => {
     if (isLoggedIn) {
-      navigate("/checkout-details");
+      // Pass cart items and total amount to checkout page
+      navigate("/checkout-details", {
+        state: { cartItems, cartTotalAmount },
+      });
     } else {
       dispatch(SAVE_URL(url));
       navigate("/login");
     }
   };
+
   return (
     <section>
       <div className={`container ${styles.table}`}>
         <h2>Shopping Cart</h2>
-        {cartItems.lenght === 0 ? (
+        {cartItems.length === 0 ? (
           <>
             <p>Your cart is currently empty.</p>
             <br />
@@ -80,7 +96,8 @@ const Cart = () => {
             </thead>
             <tbody>
               {cartItems.map((cart, index) => {
-                const { id, name, price, imageURL, cartQuantity } = cart;
+                const { id, name, totalCost, imageURL, cartQuantity } = cart;
+                console.log(totalCost);
                 return (
                   <tr key={id}>
                     <td>{index + 1}</td>
@@ -94,7 +111,8 @@ const Cart = () => {
                         style={{ width: "100px" }}
                       />
                     </td>
-                    <td>{price}</td>
+                    <td>{`$${totalCost.toFixed(2)}`}</td>
+
                     <td>
                       <div className={styles.count}>
                         <button
@@ -114,8 +132,7 @@ const Cart = () => {
                         </button>
                       </div>
                     </td>
-                    <td>{(price * cartQuantity).toFixed(2)}</td>
-
+                    <td>{`$${(totalCost * cartQuantity).toFixed(2)}`}</td>
                     <td className={styles.icon}>
                       <FaTrashAlt
                         size={19}
@@ -138,7 +155,7 @@ const Cart = () => {
                 <br />
                 <Card className={styles.card}>
                   <p>
-                    <b>{`Cart item(s):${cartTotalQuantity}`}</b>
+                    <b>{`Cart item(s): ${cartTotalQuantity}`}</b>
                   </p>
                   <div className={styles.text}>
                     <h4>Subtotal:</h4>
@@ -149,7 +166,7 @@ const Cart = () => {
                     className="--btn --btn-primary --btn-block"
                     onClick={checkout}
                   >
-                    checkout
+                    Checkout
                   </button>
                 </Card>
               </div>
