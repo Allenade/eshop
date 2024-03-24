@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { useEffect, useState } from "react";
 import {
   PaymentElement,
@@ -18,7 +19,7 @@ import {
 } from "../../slice/cartSlice";
 import { selectShippingAddress } from "../../slice/checkoutSlice";
 import { db } from "../../firebase/config";
-import { addDoc, collection, Timestamp } from "firebase/firestore"; // Import Timestamp
+import { addDoc, collection } from "firebase/firestore"; // Import Timestamp
 import { useNavigate } from "react-router-dom";
 
 const CheckoutForm = () => {

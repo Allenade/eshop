@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable react/no-unescaped-entities */
 import styles from "./auth.module.scss";
 import loginImg from "../../assets/undraw_login_re_4vu2.svg";
@@ -36,7 +37,7 @@ const Login = () => {
     e.preventDefault();
     setisLoading(true);
     signInWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
+      .then(() => {
         // Signed in
         // const user = userCredential.user;
         // console.log(user);

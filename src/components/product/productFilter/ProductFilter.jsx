@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { useDispatch, useSelector } from "react-redux";
 
 import styles from "./ProductFilter.module.scss";
@@ -19,8 +20,8 @@ export const ProductFilter = () => {
   const [brand, setBrand] = useState("All");
   const [price, setPrice] = useState(200);
 
-  const minPrice = useSelector(selectMinPrice);
-  const maxPrice = useSelector(selectMaxPrice);
+  // const minPrice = useSelector(selectMinPrice);
+  // const maxPrice = useSelector(selectMaxPrice);
 
   const dispatch = useDispatch();
   const allCategories = [

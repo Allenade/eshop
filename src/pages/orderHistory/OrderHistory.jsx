@@ -1,13 +1,11 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import useFetchCollection from "../../customHooks/useFetchCollection";
 import styles from "./OrderHistory.module.scss";
 import { useDispatch, useSelector } from "react-redux";
 import { STORE_ORDERS, selectOrderHistory } from "../../slice/orderSlice";
 import { selectUserID } from "../../slice/authSlice";
 import Loader from "../../components/loader/Loader";
-import { collection, getDocs, orderBy, query } from "firebase/firestore";
-import { db } from "../../firebase/config";
-import { toast } from "react-toastify";
+
 import { useNavigate } from "react-router-dom";
 
 const OrderHistory = () => {

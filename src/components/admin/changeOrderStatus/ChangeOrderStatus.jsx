@@ -1,18 +1,21 @@
+/* eslint-disable react/prop-types */
 import { useState } from "react";
 import styles from "./ChangeOrderStatus.module.scss";
 import Loader from "../../loader/Loader";
 import Card from "../../card/Card";
-import { Timestamp, collection, doc, setDoc } from "firebase/firestore";
+import { Timestamp, doc, setDoc } from "firebase/firestore"; // Check Firestore imports
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { db } from "../../../firebase/config";
 
+// eslint-disable-next-line react/prop-types
 const ChangeOrderStatus = ({ order, id }) => {
   const [status, setStatus] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
-  const editOrder = (e, id) => {
+  const editOrder = async (e, id) => {
+    // Add async keyword
     e.preventDefault();
     setIsLoading(true);
 
@@ -29,19 +32,17 @@ const ChangeOrderStatus = ({ order, id }) => {
       editedAt: Timestamp.now().toDate(),
     };
     try {
-      setDoc(doc(db, "orders", id), orderConfig);
+      await setDoc(doc(db, "orders", id), orderConfig); // Await setDoc
       setIsLoading(false);
-      toast.success("Order status change successfully");
+      toast.success("Order status changed successfully");
       navigate("/admin/orders");
-      // Redirect to success page after saving order
-      // window.location.href = "http://localhost:5173/checkout-success";
     } catch (error) {
-      console.error("Error adding document: ", error);
+      console.error("Error updating document: ", error);
       setIsLoading(false);
       toast.error(error.message);
     }
   };
-  //   const editOrder = () => {};
+
   return (
     <>
       <div className={styles.status}>
@@ -59,9 +60,7 @@ const ChangeOrderStatus = ({ order, id }) => {
                 </option>
                 <option value="Order Placed...">Order Placed</option>
                 <option value="Processing...">Processing...</option>
-
                 <option value="Shipped...">Shipped...</option>
-
                 <option value="Delivered">Delivered</option>
               </select>
             </span>
@@ -76,4 +75,5 @@ const ChangeOrderStatus = ({ order, id }) => {
     </>
   );
 };
+
 export default ChangeOrderStatus;

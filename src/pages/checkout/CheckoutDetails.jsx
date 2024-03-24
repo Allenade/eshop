@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react";
 import styles from "./CheckoutDetails.module.scss";
 import Card from "../../components/card/Card";
