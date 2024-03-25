@@ -34,7 +34,7 @@ export const ProductDetails = () => {
 
   useEffect(() => {
     setProduct(document);
-  }, [document]);
+  }, [document, product]);
 
   const addToCart = () => {
     // const priceToAdd = selectedPrice ? selectedPrice.price : product.price;

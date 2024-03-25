@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { HashRouter, Routes, Route } from "react-router-dom";
 // pages
 import { Home, Contact, Login, Register, Reset, Admin } from "./pages";
 // Componets
@@ -19,7 +19,7 @@ import NotFound from "./pages/notFound/NotFound";
 function App() {
   return (
     <>
-      <BrowserRouter>
+      <HashRouter>
         <ToastContainer />
         <Header />
         <Routes>
@@ -49,7 +49,7 @@ function App() {
           <Route path="*" element={<NotFound />} />
         </Routes>
         <Footer />
-      </BrowserRouter>
+      </HashRouter>
     </>
   );
 }
